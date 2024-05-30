@@ -19,22 +19,22 @@ type NewComment struct {
 }
 
 type NewPost struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	AuthorID    string `json:"authorId"`
-	URL         string `json:"url"`
-	Edit        bool   `json:"edit"`
+	Title               string `json:"title"`
+	Description         string `json:"description"`
+	AuthorID            string `json:"authorId"`
+	URL                 string `json:"url"`
+	PermissionToComment bool   `json:"permissionToComment"`
 }
 
 type Post struct {
-	ID          string     `json:"id"`
-	Title       string     `json:"title"`
-	Description string     `json:"description"`
-	Author      *User      `json:"author"`
-	URL         string     `json:"url"`
-	Comments    []*Comment `json:"comments"`
-	CreatedAt   string     `json:"createdAt"`
-	Edit        bool       `json:"edit"`
+	ID                  string     `json:"id"`
+	Title               string     `json:"title"`
+	Description         string     `json:"description"`
+	Author              *User      `json:"author"`
+	URL                 string     `json:"url"`
+	Comments            []*Comment `json:"comments"`
+	CreatedAt           string     `json:"createdAt"`
+	PermissionToComment bool       `json:"permissionToComment"`
 }
 
 type Query struct {

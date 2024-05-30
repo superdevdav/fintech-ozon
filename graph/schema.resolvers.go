@@ -15,13 +15,13 @@ import (
 func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) (*model.Post, error) {
 
 	post := &model.Post{
-		Title:       input.Title,
-		Description: input.Description,
-		Author:      &model.User{ID: input.AuthorID},
-		URL:         input.URL,
-		Comments:    []*model.Comment{},
-		CreatedAt:   getCurrentTime(),
-		Edit:        input.Edit,
+		Title:               input.Title,
+		Description:         input.Description,
+		Author:              &model.User{ID: input.AuthorID},
+		URL:                 input.URL,
+		Comments:            []*model.Comment{},
+		CreatedAt:           getCurrentTime(),
+		PermissionToComment: input.PermissionToComment,
 	}
 
 	// Добавление записи в БД
@@ -35,27 +35,32 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) 
 }
 
 // CreateComment is the resolver for the createComment field.
-func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error) {
-	// Проверка длины комментария
-	if len(input.Description) > 2000 {
-		return nil, fmt.Errorf("comment description exceeds maximum length of 2000 characters")
-	}
+func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment, PermissionToComment bool) (*model.Comment, error) {
+	// Проверка на разрешение комментирования поста
+	if PermissionToComment {
+		// Проверка длины комментария
+		if len(input.Description) > 2000 {
+			return nil, fmt.Errorf("comment description exceeds maximum length of 2000 characters")
+		}
 
-	comment := &model.Comment{
-		ID:          generateID(),
-		Description: input.Description,
-		Author:      &model.User{ID: input.AuthorID},
-		CreatedAt:   getCurrentTime(),
-	}
+		comment := &model.Comment{
+			ID:          generateID(),
+			Description: input.Description,
+			Author:      &model.User{ID: input.AuthorID},
+			CreatedAt:   getCurrentTime(),
+		}
 
-	// Добавление комментария в бд
-	err := r.CommentStore.CommentsRepository().AddComment(comment, input.PostID)
-	if err != nil {
-		log.Printf("Ошибка при добавлении комментария: %v", err)
-		return nil, err
+		// Добавление комментария в бд
+		err := r.CommentStore.CommentsRepository().AddComment(comment, input.PostID)
+		if err != nil {
+			log.Printf("Ошибка при добавлении комментария: %v", err)
+			return nil, err
+		}
+		return comment, nil
+	} else {
+		log.Printf("The author has prohibited commenting on this post")
+		return nil, fmt.Errorf("the author has prohibited commenting on this post")
 	}
-
-	return comment, nil
 }
 
 // Posts is the resolver for the posts field.

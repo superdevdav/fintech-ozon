@@ -33,11 +33,3 @@ func generateID() string {
 func getCurrentTime() string {
 	return time.Now().Format(time.RFC3339)
 }
-
-func addCommentToPost(r *mutationResolver, postID string, comment *model.Comment) {
-	for _, v := range r.posts {
-		if v.ID == postID && v.Edit {
-			v.Comments = append(v.Comments, comment)
-		}
-	}
-}

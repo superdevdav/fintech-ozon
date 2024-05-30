@@ -16,7 +16,7 @@ type Post {
   url: String!
   comments: [Comment!]!
   createdAt: Timestamp!
-  edit: Boolean!
+  permissionToComment: Boolean!
 }
 
 type Comment {
@@ -35,7 +35,7 @@ input NewPost {
   description: String!
   authorId: ID!
   url: String!
-  edit: Boolean!
+  permissionToComment: Boolean!
 }
 
 input NewComment {
@@ -46,7 +46,7 @@ input NewComment {
 
 type Mutation {
   createPost(input: NewPost!): Post!
-  createComment(input: NewComment!): Comment!
+  createComment(input: NewComment!, permissionToComment: Boolean!): Comment!
 }
 
 scalar Timestamp

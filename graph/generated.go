@@ -55,19 +55,19 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateComment func(childComplexity int, input model.NewComment) int
+		CreateComment func(childComplexity int, input model.NewComment, permissionToComment bool) int
 		CreatePost    func(childComplexity int, input model.NewPost) int
 	}
 
 	Post struct {
-		Author      func(childComplexity int) int
-		Comments    func(childComplexity int) int
-		CreatedAt   func(childComplexity int) int
-		Description func(childComplexity int) int
-		Edit        func(childComplexity int) int
-		ID          func(childComplexity int) int
-		Title       func(childComplexity int) int
-		URL         func(childComplexity int) int
+		Author              func(childComplexity int) int
+		Comments            func(childComplexity int) int
+		CreatedAt           func(childComplexity int) int
+		Description         func(childComplexity int) int
+		ID                  func(childComplexity int) int
+		PermissionToComment func(childComplexity int) int
+		Title               func(childComplexity int) int
+		URL                 func(childComplexity int) int
 	}
 
 	Query struct {
@@ -83,7 +83,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreatePost(ctx context.Context, input model.NewPost) (*model.Post, error)
-	CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error)
+	CreateComment(ctx context.Context, input model.NewComment, permissionToComment bool) (*model.Comment, error)
 }
 type QueryResolver interface {
 	Posts(ctx context.Context) ([]*model.Post, error)
@@ -146,7 +146,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateComment(childComplexity, args["input"].(model.NewComment)), true
+		return e.complexity.Mutation.CreateComment(childComplexity, args["input"].(model.NewComment), args["permissionToComment"].(bool)), true
 
 	case "Mutation.createPost":
 		if e.complexity.Mutation.CreatePost == nil {
@@ -188,19 +188,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Post.Description(childComplexity), true
 
-	case "Post.edit":
-		if e.complexity.Post.Edit == nil {
-			break
-		}
-
-		return e.complexity.Post.Edit(childComplexity), true
-
 	case "Post.id":
 		if e.complexity.Post.ID == nil {
 			break
 		}
 
 		return e.complexity.Post.ID(childComplexity), true
+
+	case "Post.permissionToComment":
+		if e.complexity.Post.PermissionToComment == nil {
+			break
+		}
+
+		return e.complexity.Post.PermissionToComment(childComplexity), true
 
 	case "Post.title":
 		if e.complexity.Post.Title == nil {
@@ -382,6 +382,15 @@ func (ec *executionContext) field_Mutation_createComment_args(ctx context.Contex
 		}
 	}
 	args["input"] = arg0
+	var arg1 bool
+	if tmp, ok := rawArgs["permissionToComment"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("permissionToComment"))
+		arg1, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["permissionToComment"] = arg1
 	return args, nil
 }
 
@@ -690,8 +699,8 @@ func (ec *executionContext) fieldContext_Mutation_createPost(ctx context.Context
 				return ec.fieldContext_Post_comments(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
-			case "edit":
-				return ec.fieldContext_Post_edit(ctx, field)
+			case "permissionToComment":
+				return ec.fieldContext_Post_permissionToComment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Post", field.Name)
 		},
@@ -724,7 +733,7 @@ func (ec *executionContext) _Mutation_createComment(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateComment(rctx, fc.Args["input"].(model.NewComment))
+		return ec.resolvers.Mutation().CreateComment(rctx, fc.Args["input"].(model.NewComment), fc.Args["permissionToComment"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1101,8 +1110,8 @@ func (ec *executionContext) fieldContext_Post_createdAt(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Post_edit(ctx context.Context, field graphql.CollectedField, obj *model.Post) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Post_edit(ctx, field)
+func (ec *executionContext) _Post_permissionToComment(ctx context.Context, field graphql.CollectedField, obj *model.Post) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Post_permissionToComment(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1115,7 +1124,7 @@ func (ec *executionContext) _Post_edit(ctx context.Context, field graphql.Collec
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Edit, nil
+		return obj.PermissionToComment, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1132,7 +1141,7 @@ func (ec *executionContext) _Post_edit(ctx context.Context, field graphql.Collec
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Post_edit(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Post_permissionToComment(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Post",
 		Field:      field,
@@ -1198,8 +1207,8 @@ func (ec *executionContext) fieldContext_Query_posts(_ context.Context, field gr
 				return ec.fieldContext_Post_comments(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
-			case "edit":
-				return ec.fieldContext_Post_edit(ctx, field)
+			case "permissionToComment":
+				return ec.fieldContext_Post_permissionToComment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Post", field.Name)
 		},
@@ -3289,7 +3298,7 @@ func (ec *executionContext) unmarshalInputNewPost(ctx context.Context, obj inter
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "authorId", "url", "edit"}
+	fieldsInOrder := [...]string{"title", "description", "authorId", "url", "permissionToComment"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3324,13 +3333,13 @@ func (ec *executionContext) unmarshalInputNewPost(ctx context.Context, obj inter
 				return it, err
 			}
 			it.URL = data
-		case "edit":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("edit"))
+		case "permissionToComment":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("permissionToComment"))
 			data, err := ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Edit = data
+			it.PermissionToComment = data
 		}
 	}
 
@@ -3501,8 +3510,8 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "edit":
-			out.Values[i] = ec._Post_edit(ctx, field, obj)
+		case "permissionToComment":
+			out.Values[i] = ec._Post_permissionToComment(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

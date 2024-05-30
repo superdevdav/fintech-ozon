@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS posts (
     author_id INTEGER REFERENCES users(id),
     url VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    edit BOOLEAN DEFAULT FALSE
+    permission_to_comment BOOLEAN DEFAULT TRUE
 );
 
 -- Таблица комментариев

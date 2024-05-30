@@ -17,8 +17,8 @@ func NewPostRepository(db *sql.DB) *PostRepository {
 
 // Добавление поста в бд
 func (r *PostRepository) AddPost(p *model.Post) error {
-	query := `INSERT INTO posts (title, description, author_id, url, created_at, edit) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;`
-	err := r.db.QueryRow(query, p.Title, p.Description, p.Author.ID, p.URL, p.CreatedAt, p.Edit).Scan(&p.ID)
+	query := `INSERT INTO posts (title, description, author_id, url, created_at, permission_to_comment) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;`
+	err := r.db.QueryRow(query, p.Title, p.Description, p.Author.ID, p.URL, p.CreatedAt, p.PermissionToComment).Scan(&p.ID)
 	if err != nil {
 		log.Printf("Ошибка при добавлении поста в базу данных: %v", err)
 		return err
@@ -31,7 +31,7 @@ func (r *PostRepository) AddPost(p *model.Post) error {
 
 // Получение всех постов из бд
 func (r *PostRepository) GetAllPosts() ([]*model.Post, error) {
-	query := `SELECT id, title, description, author_id, url, created_at, edit FROM posts;`
+	query := `SELECT id, title, description, author_id, url, created_at, permission_to_comment FROM posts;`
 	rows, err := r.db.Query(query)
 	if err != nil {
 		log.Printf("Ошибка при получении всех постов: %v", err)
@@ -44,7 +44,7 @@ func (r *PostRepository) GetAllPosts() ([]*model.Post, error) {
 		var post model.Post
 		var authorID string
 
-		err := rows.Scan(&post.ID, &post.Title, &post.Description, &authorID, &post.URL, &post.CreatedAt, &post.Edit)
+		err := rows.Scan(&post.ID, &post.Title, &post.Description, &authorID, &post.URL, &post.CreatedAt, &post.PermissionToComment)
 		if err != nil {
 			log.Printf("Ошибка при сканировании строки поста: %v", err)
 			return nil, err
