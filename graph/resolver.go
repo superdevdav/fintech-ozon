@@ -1,7 +1,10 @@
 package graph
 
 import (
+	"database/sql"
 	"fintech-app/graph/model"
+	"fintech-app/storage/storeComments"
+	"fintech-app/storage/storePosts"
 	"math/rand"
 	"strconv"
 	"time"
@@ -10,8 +13,17 @@ import (
 //go:generate go run github.com/99designs/gqlgen
 
 type Resolver struct {
-	posts    []*model.Post
-	comments []*model.Comment
+	posts        []*model.Post
+	comments     []*model.Comment
+	PostStore    *storePosts.StorePosts
+	CommentStore *storeComments.StoreComments
+}
+
+func NewResolver(db *sql.DB) *Resolver {
+	return &Resolver{
+		PostStore:    storePosts.NewStorePosts(db),
+		CommentStore: storeComments.NewStoreComments(db),
+	}
 }
 
 func generateID() string {
@@ -20,4 +32,12 @@ func generateID() string {
 
 func getCurrentTime() string {
 	return time.Now().Format(time.RFC3339)
+}
+
+func addCommentToPost(r *mutationResolver, postID string, comment *model.Comment) {
+	for _, v := range r.posts {
+		if v.ID == postID && v.Edit {
+			v.Comments = append(v.Comments, comment)
+		}
+	}
 }

@@ -7,12 +7,14 @@ package graph
 import (
 	"context"
 	"fintech-app/graph/model"
+	"fmt"
+	"log"
 )
 
 // CreatePost is the resolver for the createPost field.
 func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) (*model.Post, error) {
+
 	post := &model.Post{
-		ID:          generateID(),
 		Title:       input.Title,
 		Description: input.Description,
 		Author:      &model.User{ID: input.AuthorID},
@@ -21,25 +23,49 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) 
 		CreatedAt:   getCurrentTime(),
 		Edit:        input.Edit,
 	}
-	r.posts = append(r.posts, post)
+
+	// Добавление записи в БД
+	err := r.PostStore.PostRepository().AddPost(post)
+	if err != nil {
+		log.Printf("Ошибка при добавлении поста: %v", err)
+		return nil, err
+	}
+
 	return post, nil
 }
 
 // CreateComment is the resolver for the createComment field.
 func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment) (*model.Comment, error) {
+	// Проверка длины комментария
+	if len(input.Description) > 2000 {
+		return nil, fmt.Errorf("comment description exceeds maximum length of 2000 characters")
+	}
+
 	comment := &model.Comment{
 		ID:          generateID(),
 		Description: input.Description,
 		Author:      &model.User{ID: input.AuthorID},
 		CreatedAt:   getCurrentTime(),
 	}
-	r.comments = append(r.comments, comment)
+
+	// Добавление комментария в бд
+	err := r.CommentStore.CommentsRepository().AddComment(comment, input.PostID)
+	if err != nil {
+		log.Printf("Ошибка при добавлении комментария: %v", err)
+		return nil, err
+	}
+
 	return comment, nil
 }
 
 // Posts is the resolver for the posts field.
 func (r *queryResolver) Posts(ctx context.Context) ([]*model.Post, error) {
-	return r.posts, nil
+	posts, err := r.PostStore.PostRepository().GetAllPosts()
+	if err != nil {
+		log.Printf("Ошибка при получении постов: %v", err)
+		return nil, err
+	}
+	return posts, nil
 }
 
 // Mutation returns MutationResolver implementation.
