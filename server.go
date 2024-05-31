@@ -3,12 +3,14 @@ package main
 import (
 	"database/sql"
 	"fintech-app/graph"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -18,8 +20,19 @@ import (
 const defaultPort = "8080"
 
 func main() {
+	// Подгрузка конфигурационного файла
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	// Получение параметров подключения к базе данных из переменных окружения
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+
 	// Подключение к бд
-	connStr := "user=postgres password=qwerty123 dbname=productdb sslmode=disable"
+	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", dbUser, dbPassword, dbName)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
