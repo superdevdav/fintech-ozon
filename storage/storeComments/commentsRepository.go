@@ -3,6 +3,7 @@ package storeComments
 import (
 	"database/sql"
 	"fintech-app/graph/model"
+	"fmt"
 	"log"
 	"strconv"
 )
@@ -17,6 +18,11 @@ func NewCommentsRepository(db *sql.DB) *CommentsRepository {
 
 // Добавление комментария в бд
 func (r *CommentsRepository) AddComment(c *model.Comment, post_id string) error {
+	// Проверка на длину комментария
+	if len(c.Description) >= 2000 {
+		return fmt.Errorf("the maximum length of a comment description is more than or equal to 2000 characters")
+	}
+
 	postID, _ := strconv.Atoi(post_id)
 	query := `INSERT INTO comments (post_id, user_id, content, created_at) VALUES($1, $2, $3, $4) RETURNING id`
 	err := r.db.QueryRow(query, postID, c.Author.ID, c.Description, c.CreatedAt).Scan(&c.ID)

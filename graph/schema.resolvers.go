@@ -38,11 +38,6 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input model.NewPost) 
 func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewComment, PermissionToComment bool) (*model.Comment, error) {
 	// Проверка на разрешение комментирования поста
 	if PermissionToComment {
-		// Проверка длины комментария
-		if len(input.Description) > 2000 {
-			return nil, fmt.Errorf("comment description exceeds maximum length of 2000 characters")
-		}
-
 		comment := &model.Comment{
 			ID:          generateID(),
 			Description: input.Description,

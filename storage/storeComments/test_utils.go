@@ -1,4 +1,4 @@
-package storePosts
+package storeComments
 
 import (
 	"database/sql"
