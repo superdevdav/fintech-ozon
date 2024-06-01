@@ -14,37 +14,37 @@
 ## Примеры GraphQL запросов
 1. Создание поста
    mutation {<br/>
-  createPost(input: {
-    title: "Название поста",
-    description: "Описание поста",
-    authorId: "123",
-    url: "https://example.com",
-  	permissionToComment: true
-  }) {
-    id
-    title
-    description
-    author {
-      id
-    }
-    url
-    createdAt
-  }
-}
+  createPost(input: {<br/>
+    title: "Название поста",<br/>
+    description: "Описание поста",<br/>
+    authorId: "123",<br/>
+    url: "https://example.com",<br/>
+  	permissionToComment: true<br/>
+  }) {<br/>
+    id<br/>
+    title<br/>
+    description<br/>
+    author {<br/>
+      id<br/>
+    }<br/>
+    url<br/>
+    createdAt<br/>
+  }<br/>
+}<br/>
 2. Создание комментария
-   mutation {
-  createComment(input: {
-    description: "Это комментарий к посту",
-    authorId: "124",
-    postId: "1"
-  }, permissionToComment: true) {
-    id
-    description
-    author {
-      id
-      name
-      email
-    }
-    createdAt
-  }
-}
+   mutation {<br/>
+  createComment(input: {<br/>
+    description: "Это комментарий к посту",<br/>
+    authorId: "124",<br/>
+    postId: "1"<br/>
+  }, permissionToComment: true) {<br/>
+    id<br/>
+    description<br/>
+    author {<br/>
+      id<br/>
+      name<br/>
+      email<br/>
+    }<br/>
+    createdAt<br/>
+  }<br/>
+}<br/>
