@@ -121,5 +121,5 @@ func TestAddCommentEmpty(t *testing.T) {
 	}
 
 	err = repo.AddComment(comment, post_id)
-	require.NoError(t, err)
+	assert.Equal(t, fmt.Errorf("the minimum length of a comment description should be more than or equal to 1 character"), err)
 }
