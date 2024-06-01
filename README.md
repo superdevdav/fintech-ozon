@@ -33,7 +33,7 @@
   }
 }
 ```
-**2. Создание комментария**
+**2. Создание комментария**<br/>
 P.S. permissionToComment у запроса должно совпадать с permissionToComment у поста
 ```
 mutation {
