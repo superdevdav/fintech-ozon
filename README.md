@@ -5,6 +5,7 @@
 1. Файл server.go главный
 2. В /graph/... реализация GraphQL запросов
 3. В /storage/... находится функционал, связанный с постами, комментариями и таблицами
+
 ## Про Docker
 Для запуска docker-compose.yml ```docker-compose up --build app```
 **Результат**<br/>
@@ -25,6 +26,17 @@ app-1  | 2024/06/01 19:27:25 connect to http://localhost:8080/ for GraphQL playg
 ## Про /storage/storeComments
 В commentsRepository.go имеется структура CommentsRepository с методом AddComment.
 В commentsRepository_test.go находятся тесты для CommentsRepository, такие как TestAddComment, TestAddCommentMore2000Symbols, TestAddCommentEmpty
+
+## Конфигурационный файл
+Вид файла .env (в одной директории с server.go)
+```
+DB_USER=%DB_USER%
+DB_PASSWORD=%DB_PASSWORD%
+DB_NAME=%DB_NAME%
+DB_HOST=%DB_HOST%
+DB_PORT=%%DB_PORT
+PORT=%PORT%
+```
 
 ## Про базу данных
 В основном коде используется хранение данных в PostgreSQL (entities.sql), в тестировании хранение данных происходит in-memory (test_utils.go)<br/>
