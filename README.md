@@ -18,15 +18,16 @@ app-1  | 2024/06/01 19:27:25 Таблицы успешно созданы
 app-1  | 2024/06/01 19:27:25 connect to http://localhost:8080/ for GraphQL playground
 ```
 
-## /storage/storePosts
+## Про /storage/storePosts
 В postRepository.go имеется структура PostRepository с методами AddPost, GetAllPosts, getCommentsForPost, getUserByID.
 В postRepository_test.go находятся тесты для PostRepository.
 
-## /storage/storeComments
+## Про /storage/storeComments
 В commentsRepository.go имеется структура CommentsRepository с методом AddComment.
 В commentsRepository_test.go находятся тесты для CommentsRepository, такие как TestAddComment, TestAddCommentMore2000Symbols, TestAddCommentEmpty
 
 ## Про базу данных
+В основном коде используется хранение данных в PostgreSQL, в тестировании хранение данных происходит in-memory (test_utils.go)
 Хранение данных в PostgreSQL. Имеется база данных productdb с тремя таблицами (entities.sql)
 ```
 -- Таблица пользователей
