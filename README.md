@@ -13,7 +13,7 @@
 
 ## Примеры GraphQL запросов
 1. Создание поста
-   mutation {
+   mutation {<br/>
   createPost(input: {
     title: "Название поста",
     description: "Описание поста",
