@@ -30,7 +30,7 @@ func (r *PostRepository) AddPost(p *model.Post) error {
 }
 
 // Получение всех постов из бд
-func (r *PostRepository) GetAllPosts() ([]*model.Post, error) {
+func (r *PostRepository) GetAllPosts(limit int, offset int) ([]*model.Post, error) {
 	query := `SELECT id, title, description, author_id, url, created_at, permission_to_comment FROM posts;`
 	rows, err := r.db.Query(query)
 	if err != nil {
@@ -52,7 +52,7 @@ func (r *PostRepository) GetAllPosts() ([]*model.Post, error) {
 
 		post.Author = &model.User{ID: authorID}
 
-		comments, err := r.getCommentsForPost(post.ID)
+		comments, err := r.getCommentsForPost(post.ID, limit, offset)
 		if err != nil {
 			log.Printf("Ошибка при получении комментариев для поста с ID %s: %v", post.ID, err)
 			return nil, err
@@ -71,9 +71,9 @@ func (r *PostRepository) GetAllPosts() ([]*model.Post, error) {
 }
 
 // Получение списка комментариев к посту
-func (r *PostRepository) getCommentsForPost(postID string) ([]*model.Comment, error) {
-	query := `SELECT user_id, content, created_at FROM comments WHERE post_id=$1;`
-	rows, err := r.db.Query(query, postID)
+func (r *PostRepository) getCommentsForPost(postID string, limit int, offset int) ([]*model.Comment, error) {
+	query := `SELECT user_id, content, created_at FROM comments WHERE post_id=$1 LIMIT $2 OFFSET $3;`
+	rows, err := r.db.Query(query, postID, limit, offset)
 	if err != nil {
 		log.Printf("Ошибка при получении комментариев для поста: %v", err)
 		return nil, err

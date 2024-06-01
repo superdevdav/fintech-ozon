@@ -59,8 +59,18 @@ func (r *mutationResolver) CreateComment(ctx context.Context, input model.NewCom
 }
 
 // Posts is the resolver for the posts field.
-func (r *queryResolver) Posts(ctx context.Context) ([]*model.Post, error) {
-	posts, err := r.PostStore.PostRepository().GetAllPosts()
+func (r *queryResolver) Posts(ctx context.Context, limit *int, offset *int) ([]*model.Post, error) {
+	defaultLimit := 10
+	defaultOffset := 0
+
+	if limit == nil {
+		limit = &defaultLimit
+	}
+	if offset == nil {
+		offset = &defaultOffset
+	}
+
+	posts, err := r.PostStore.PostRepository().GetAllPosts(*limit, *offset)
 	if err != nil {
 		log.Printf("Ошибка при получении постов: %v", err)
 		return nil, err

@@ -27,8 +27,8 @@ type Comment {
 }
 
 type Query {
-  posts: [Post!]!
-}
+  posts(limit: Int, offset: Int): [Post]
+} 
 
 input NewPost {
   title: String!
