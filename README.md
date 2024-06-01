@@ -34,7 +34,7 @@
 }
 ```
 **2. Создание комментария**<br/>
-P.S. permissionToComment у запроса должно совпадать с permissionToComment у поста
+P.S. Значение permissionToComment у запроса должно совпадать с permissionToComment у поста
 ```
 mutation {
   createComment(input: {
@@ -72,7 +72,7 @@ mutation {
 ```
 P.S. значения name и email заполнены при выводе постов с комментариями
 
-Иначе при permissionToComment = false
+Ответ сервера при permissionToComment = false
 ```
 {
   "errors": [
