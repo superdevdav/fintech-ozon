@@ -12,7 +12,7 @@
 В commentsRepository_test.go находятся тесты для CommentsRepository, такие как TestAddComment, TestAddCommentMore2000Symbols, TestAddCommentEmpty
 
 ## Примеры GraphQL запросов
-1. Создание поста
+**1. Создание поста**
 ```
    mutation
   createPost(input: {
@@ -33,7 +33,7 @@
   }
 }
 ```
-2. Создание комментария
+**2. Создание комментария**
 P.S. permissionToComment у запроса должно совпадать с permissionToComment у поста
 ```
 mutation {
