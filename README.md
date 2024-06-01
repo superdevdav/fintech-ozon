@@ -27,8 +27,8 @@ app-1  | 2024/06/01 19:27:25 connect to http://localhost:8080/ for GraphQL playg
 В commentsRepository_test.go находятся тесты для CommentsRepository, такие как TestAddComment, TestAddCommentMore2000Symbols, TestAddCommentEmpty
 
 ## Про базу данных
-В основном коде используется хранение данных в PostgreSQL, в тестировании хранение данных происходит in-memory (test_utils.go)
-Хранение данных в PostgreSQL. Имеется база данных productdb с тремя таблицами (entities.sql)
+В основном коде используется хранение данных в PostgreSQL (entities.sql), в тестировании хранение данных происходит in-memory (test_utils.go)<br/>
+Содержимое entities.sql
 ```
 -- Таблица пользователей
 CREATE TABLE IF NOT EXISTS users (
