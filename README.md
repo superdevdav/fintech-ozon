@@ -5,6 +5,18 @@
 1. Файл server.go главный
 2. В /graph/... реализация graphql запросов
 3. В /storage/... находится функционал, связанный с постами, комментариями и таблицами
+## Про Docker
+Для запуска docker-compose.yml ```docker-compose up --build app```
+**Результат**<br/>
+```
+[+] Running 2/2
+ ✔ Container fintech-db-1   Running                                                                                                                                           0.0s 
+ ✔ Container fintech-app-1  Recreated                                                                                                                                         0.2s 
+Attaching to app-1
+app-1  | 2024/06/01 19:27:25 Успешное подключение к базе данных
+app-1  | 2024/06/01 19:27:25 Таблицы успешно созданы
+app-1  | 2024/06/01 19:27:25 connect to http://localhost:8080/ for GraphQL playground
+```
 
 ## /storage/storePosts
 В postRepository.go имеется структура PostRepository с методами AddPost, GetAllPosts, getCommentsForPost, getUserByID.
