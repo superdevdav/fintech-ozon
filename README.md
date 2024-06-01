@@ -13,8 +13,9 @@
 
 ## Примеры GraphQL запросов
 1. Создание поста
-   mutation {<br/>
-  createPost(input: {<br/>
+```
+   mutation
+  createPost(input: {
     title: "Название поста",<br/>
     description: "Описание поста",<br/>
     authorId: "123",<br/>
@@ -31,7 +32,8 @@
     createdAt<br/>
   }<br/>
 }<br/>
-2. Создание комментария
+```
+3. Создание комментария
    mutation {<br/>
   createComment(input: {<br/>
     description: "Это комментарий к посту",<br/>
