@@ -3,7 +3,7 @@
 
 ## Структура
 1. Файл server.go главный
-2. В /graph/... реализация graphql запросов
+2. В /graph/... реализация GraphQL запросов
 3. В /storage/... находится функционал, связанный с постами, комментариями и таблицами
 ## Про Docker
 Для запуска docker-compose.yml ```docker-compose up --build app```
