@@ -34,12 +34,13 @@
 }
 ```
 2. Создание комментария
+P.S. permissionToComment у запроса должно совпадать с permissionToComment у поста
 ```
-   mutation {
+mutation {
   createComment(input: {
     description: "Это комментарий к посту",
-    authorId: "124",
-    postId: "1"
+    authorId: "2",
+    postId: "2"
   }, permissionToComment: true) {
     id
     description
@@ -50,5 +51,38 @@
     }
     createdAt
   }
+}
+```
+Если permissionToComment = true, то ответ от сервера будет иметь вид
+```
+{
+  "data": {
+    "createComment": {
+      "id": "2",
+      "description": "Это комментарий к посту",
+      "author": {
+        "id": "2",
+        "name": "",
+        "email": ""
+      },
+      "createdAt": "2024-06-01T17:48:59+03:00"
+    }
+  }
+}
+```
+P.S. значения name и email заполнены при выводе постов с комментариями
+
+Иначе при permissionToComment = false
+```
+{
+  "errors": [
+    {
+      "message": "the author has prohibited commenting on this post",
+      "path": [
+        "createComment"
+      ]
+    }
+  ],
+  "data": null
 }
 ```
