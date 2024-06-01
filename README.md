@@ -11,6 +11,38 @@
 В commentsRepository.go имеется структура CommentsRepository с методом AddComment.
 В commentsRepository_test.go находятся тесты для CommentsRepository, такие как TestAddComment, TestAddCommentMore2000Symbols, TestAddCommentEmpty
 
+## Про базу данных
+Хранение данных в PostgreSQL. Имеется база данных productdb с тремя таблицами (entities.sql)
+```
+-- Таблица пользователей
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+
+-- Таблица постов
+CREATE TABLE IF NOT EXISTS posts (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    author_id INTEGER REFERENCES users(id),
+    url VARCHAR(200),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    permission_to_comment BOOLEAN DEFAULT TRUE
+);
+
+-- Таблица комментариев
+CREATE TABLE IF NOT EXISTS comments (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER REFERENCES posts(id),
+    user_id INTEGER REFERENCES users(id),
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+При разработке создал пару пользователей в таблице users
+
 ## Примеры GraphQL запросов
 **1. Создание поста**<br/>
 **Запрос:**
