@@ -17,6 +17,16 @@ func NewPostRepository(db *sql.DB) *PostRepository {
 
 // Добавление поста в бд
 func (r *PostRepository) AddPost(p *model.Post) error {
+	// Проверка на длину title поста
+	if len(p.Title) == 0 {
+		return fmt.Errorf("post title should be not empty")
+	}
+
+	// Проверка на длину description поста
+	if len(p.Description) == 0 {
+		return fmt.Errorf("post description should be not empty")
+	}
+
 	query := `INSERT INTO posts (title, description, author_id, url, created_at, permission_to_comment) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;`
 	err := r.db.QueryRow(query, p.Title, p.Description, p.Author.ID, p.URL, p.CreatedAt, p.PermissionToComment).Scan(&p.ID)
 	if err != nil {
