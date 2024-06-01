@@ -40,3 +40,55 @@ func TestAddPost(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, 1, count)
 }
+
+// Тестирование создания поста с пустым title
+func TestAddPostEmptyTitle(t *testing.T) {
+	db := setupTestDB(t)
+	defer db.Close()
+
+	store := NewStorePosts(db)
+	repo := store.PostRepository()
+
+	// Создание тестового пользователя
+	query := `INSERT INTO users (name, email) VALUES('name_test', 'email_test');`
+	_, err := db.Exec(query)
+	require.NoError(t, err)
+
+	post := &model.Post{
+		Title:               "",
+		Description:         "This is a test post",
+		Author:              &model.User{ID: "1"},
+		URL:                 "https://test_example.com",
+		CreatedAt:           time.Now().Format(time.RFC3339),
+		PermissionToComment: true,
+	}
+
+	err = repo.AddPost(post)
+	assert.Equal(t, fmt.Errorf("post title should be not empty"), err)
+}
+
+// Тестирование создания поста с пустым description
+func TestAddPostEmptyDescription(t *testing.T) {
+	db := setupTestDB(t)
+	defer db.Close()
+
+	store := NewStorePosts(db)
+	repo := store.PostRepository()
+
+	// Создание тестового пользователя
+	query := `INSERT INTO users (name, email) VALUES('name_test', 'email_test');`
+	_, err := db.Exec(query)
+	require.NoError(t, err)
+
+	post := &model.Post{
+		Title:               "Test Post",
+		Description:         "",
+		Author:              &model.User{ID: "1"},
+		URL:                 "https://test_example.com",
+		CreatedAt:           time.Now().Format(time.RFC3339),
+		PermissionToComment: true,
+	}
+
+	err = repo.AddPost(post)
+	assert.Equal(t, fmt.Errorf("post description should be not empty"), err)
+}
