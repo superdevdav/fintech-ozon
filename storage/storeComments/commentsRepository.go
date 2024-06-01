@@ -18,9 +18,13 @@ func NewCommentsRepository(db *sql.DB) *CommentsRepository {
 
 // Добавление комментария в бд
 func (r *CommentsRepository) AddComment(c *model.Comment, post_id string) error {
-	// Проверка на длину комментария
+	// Проверки на длину комментария
 	if len(c.Description) >= 2000 {
 		return fmt.Errorf("the maximum length of a comment description is more than or equal to 2000 characters")
+	}
+
+	if len(c.Description) == 0 {
+		return fmt.Errorf("the minimum length of a comment description should be more than or equal to 1 character")
 	}
 
 	postID, _ := strconv.Atoi(post_id)
