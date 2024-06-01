@@ -264,3 +264,6 @@ query {
   }
 }
 ```
+## Про тесты
+Тесты postRepository_test.go: TestAddPost, TestAddPostEmptyTitle, TestAddPostEmptyDescription
+Тесты commentsRepository_test.go: TestAddComment, TestAddCommentMore2000Symbols, TestAddCommentEmpty
