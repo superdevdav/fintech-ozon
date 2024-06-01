@@ -144,7 +144,7 @@ P.S. значения name и email заполнены при выводе по�
 **Запрос:**
 ```
 query {
-  posts {
+  posts(limit: 3, offset: 0) {
     id
     title
     description
@@ -173,12 +173,12 @@ query {
     "posts": [
       {
         "id": "1",
-        "title": "Название поста1",
-        "description": "Описание поста1",
+        "title": "Название поста 1",
+        "description": "Описание поста 1",
         "author": {
           "id": "1"
         },
-        "url": "https://example.com1",
+        "url": "https://example1.com",
         "comments": [
           {
             "id": "",
@@ -195,22 +195,42 @@ query {
       },
       {
         "id": "2",
-        "title": "Название поста2",
-        "description": "Описание поста2",
+        "title": "Название поста 2",
+        "description": "Описание поста 2",
         "author": {
           "id": "1"
         },
-        "url": "https://example.com2",
+        "url": "https://example2.com",
         "comments": [
           {
             "id": "",
-            "description": "Это комментарий к посту какой то",
+            "description": "Это 1 комментарий к посту",
             "author": {
               "id": "2",
               "name": "user2",
               "email": "email2"
             },
             "createdAt": "2024-06-01T17:48:59Z"
+          },
+          {
+            "id": "",
+            "description": "Это 2 комментарий к посту",
+            "author": {
+              "id": "2",
+              "name": "user3",
+              "email": "email3"
+            },
+            "createdAt": "2024-06-01T19:44:21Z"
+          },
+          {
+            "id": "",
+            "description": "Это 3 комментарий к посту",
+            "author": {
+              "id": "2",
+              "name": "user2",
+              "email": "email2"
+            },
+            "createdAt": "2024-06-01T19:44:29Z"
           }
         ],
         "createdAt": "2024-05-30T15:33:17Z"
